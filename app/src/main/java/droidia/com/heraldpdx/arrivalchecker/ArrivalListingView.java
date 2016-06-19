@@ -1,7 +1,5 @@
 package droidia.com.heraldpdx.arrivalchecker;
 
-import java.util.List;
-
 import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
 
 
@@ -11,7 +9,7 @@ import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
 
 interface ArrivalListingView {
 
-    void displayArrivals(List<ArrivalResults> arrivals);
+    void displayArrivals(ArrivalResults arrivals);
 
     void fetchingArrivalsFailed(String message);
 }

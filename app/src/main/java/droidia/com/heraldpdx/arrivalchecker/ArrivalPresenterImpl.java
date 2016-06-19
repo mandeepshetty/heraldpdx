@@ -1,16 +1,18 @@
 package droidia.com.heraldpdx.arrivalchecker;
 
 import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
  * Created by mandeep on 18/6/16.
  */
-public class ArrivalPresenterImpl implements ArrivalPresenter {
+    class ArrivalPresenterImpl implements ArrivalPresenter {
 
     private ArrivalInteractor interactor;
     private ArrivalListingView listingView;
@@ -40,7 +42,7 @@ public class ArrivalPresenterImpl implements ArrivalPresenter {
 
                     @Override
                     public void onNext(ArrivalResults arrivalResults) {
-
+                        listingView.displayArrivals(arrivalResults);
                     }
                 });
     }

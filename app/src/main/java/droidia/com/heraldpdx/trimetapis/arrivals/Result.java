@@ -7,7 +7,7 @@ import java.util.List;
  */
 
 public class Result {
-    List<Arrival> arrival;
+    public List<Arrival> arrival;
     String queryTime;
     List<Location> location;
 }
