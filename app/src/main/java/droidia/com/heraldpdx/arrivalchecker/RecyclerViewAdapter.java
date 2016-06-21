@@ -43,7 +43,9 @@ class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapter.Arri
     }
 
     @Override public int getItemCount() {
-        // todo arrival could be null.
+        // todo arrival could be null. eg. Location ID 5858.
+        // todo This check should probably go in the Presenter and an interface
+        // todo to the presenter needs to be added to handle the no arrivals found case.
         return arrivals.resultSet.arrival.size();
     }
 

@@ -11,8 +11,12 @@
         android:id="@+id/estimatedArrival"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         app:layout_constraintLeft_toLeftOf="@+id/locationCardConstraintLayout"
         app:layout_constraintRight_toRightOf="@+id/locationCardConstraintLayout"
-        tools:layout_editor_absoluteY="25dp" />
+        app:layout_constraintTop_toTopOf="@+id/locationCardConstraintLayout"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
 </android.support.constraint.ConstraintLayout>
