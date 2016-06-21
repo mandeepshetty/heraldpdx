@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Herald PDX</string>
+    <string name="enter_stop_id_to_check_arrivals">Enter stop ID to check arrivals</string>
 </resources>

@@ -11,37 +11,94 @@
         android:id="@+id/locationID"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Enter stop ID to check arrivals"
+        android:hint="@string/enter_stop_id_to_check_arrivals"
         android:inputType="numberDecimal"
         app:layout_constraintLeft_toLeftOf="@+id/activity_main"
-        app:layout_constraintRight_toRightOf="@+id/activity_main"
-        app:layout_constraintTop_toTopOf="@+id/activity_main"
+        android:layout_marginStart="20dp"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        app:layout_constraintTop_toTopOf="@+id/activity_main"
+        android:layout_marginTop="8dp"
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/activity_main"
+        android:layout_marginEnd="20dp"
+        tools:layout_constraintRight_creator="1" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/arrivalsRecyclerView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/activity_main"
-        app:layout_constraintHorizontal_bias="0.12"
+        android:layout_height="337dp"
         app:layout_constraintLeft_toLeftOf="@+id/activity_main"
-        app:layout_constraintRight_toRightOf="@+id/activity_main"
-        app:layout_constraintTop_toBottomOf="@+id/locationID"
-        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="19dp"
         tools:layout_constraintLeft_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/activity_main"
+        android:layout_marginEnd="19dp"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1">
+        app:layout_constraintBottom_toBottomOf="@+id/activity_main"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintHorizontal_bias="0.42">
 
     </android.support.v7.widget.RecyclerView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/locationCard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintLeft_toLeftOf="@+id/activity_main"
+        android:layout_marginStart="20dp"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintTop_toBottomOf="@+id/locationID"
+        android:layout_marginTop="17dp"
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintRight_toRightOf="@+id/activity_main"
+        android:layout_marginEnd="20dp"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/arrivalsRecyclerView"
+        android:layout_marginBottom="18dp"
+        tools:layout_constraintBottom_creator="1">
+
+
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/locationCardConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/locationCardLocationID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9832"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="@+id/locationCardConstraintLayout"
+                android:layout_marginStart="10dp"
+                tools:layout_constraintLeft_creator="1"
+                app:layout_constraintTop_toTopOf="@+id/locationCardConstraintLayout"
+                app:layout_constraintBottom_toBottomOf="@+id/locationCardConstraintLayout"
+                app:layout_constraintHorizontal_bias="0.09" />
+
+            <TextView
+                android:id="@+id/locationCardLocationDescription"
+                android:layout_width="184dp"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:maxLines="2"
+                android:text="Beaverton Creek"
+                android:textSize="15sp"
+                app:layout_constraintLeft_toRightOf="@+id/locationCardLocationID"
+                android:layout_marginStart="8dp"
+                app:layout_constraintTop_toTopOf="@+id/locationCardConstraintLayout"
+                android:layout_marginTop="4dp"
+                tools:layout_constraintTop_creator="1"
+                app:layout_constraintBottom_toBottomOf="@+id/locationCardConstraintLayout"
+                tools:layout_constraintBottom_creator="1"
+                app:layout_constraintHorizontal_bias="0.06" />
+
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>

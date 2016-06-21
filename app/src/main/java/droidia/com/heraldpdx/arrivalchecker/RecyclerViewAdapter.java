@@ -37,8 +37,6 @@ class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapter.Arri
     @Override
     public void onBindViewHolder(ArrivalViewHolder holder, int position) {
 
-        holder.arrivalDesc.setText(arrivals.resultSet.location.get(0).desc);
-
         Arrival arrival = arrivals.resultSet.arrival.get(position);
         int arrivalIn = (int) ((arrival.estimated - System.currentTimeMillis()) / 1000 / 60);
         holder.estimatedArrivalIn.setText(String.format("Estimated arrival in %d minutes", arrivalIn));
@@ -49,11 +47,9 @@ class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapter.Arri
     }
 
 
-    class ArrivalViewHolder extends RecyclerView.ViewHolder{
+    static class ArrivalViewHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id.arrivalDesc) TextView arrivalDesc;
         @BindView(R.id.estimatedArrival) TextView estimatedArrivalIn;
-
         ArrivalViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

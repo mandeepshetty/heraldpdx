@@ -2,21 +2,23 @@ package droidia.com.heraldpdx.arrivalchecker;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnEditorAction;
 import droidia.com.heraldpdx.R;
 import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
+import droidia.com.heraldpdx.trimetapis.arrivals.Location;
 
 public class MainActivity extends AppCompatActivity implements ArrivalListingView, View.OnKeyListener {
 
@@ -32,19 +34,24 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
         initViews();
     }
 
-    @BindView(R.id.locationID) EditText locationID;
-    @BindView(R.id.arrivalsRecyclerView) RecyclerView arrivalsRecyclerView;
-    private void initViews() {
-        ButterKnife.bind(this);
-        locationID.setOnKeyListener(this);
-    }
+
 
     @Override
     public void displayArrivals(ArrivalResults arrivals) {
-        Toast.makeText(this, "Hello!", Toast.LENGTH_SHORT).show();
+
+        displayLocationCard(arrivals.resultSet.location);
         adapter = new RecyclerViewAdapter(arrivals);
         arrivalsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         arrivalsRecyclerView.setAdapter(adapter);
+    }
+
+    private void displayLocationCard(List<Location> location) {
+
+        if (location.isEmpty())
+            return;
+        locationCard.setVisibility(View.VISIBLE);
+        locationCardLocID.setText(String.valueOf(location.get(0).id));
+        locationCardLocDesc.setText(location.get(0).desc);
     }
 
     @Override
@@ -67,5 +74,15 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
             return;
         }
         presenter.getArrivalsAtLocation(locationID, 1);
+    }
+
+    @BindView(R.id.locationID) EditText locationID;
+    @BindView(R.id.arrivalsRecyclerView) RecyclerView arrivalsRecyclerView;
+    @BindView(R.id.locationCard) CardView locationCard;
+    @BindView(R.id.locationCardLocationDescription) TextView locationCardLocDesc;
+    @BindView(R.id.locationCardLocationID) TextView locationCardLocID;
+    private void initViews() {
+        ButterKnife.bind(this);
+        locationID.setOnKeyListener(this);
     }
 }
