@@ -43,6 +43,7 @@ class RecyclerViewAdapter  extends RecyclerView.Adapter<RecyclerViewAdapter.Arri
     }
 
     @Override public int getItemCount() {
+        // todo arrival could be null.
         return arrivals.resultSet.arrival.size();
     }
 
