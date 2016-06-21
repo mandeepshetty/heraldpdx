@@ -8,6 +8,6 @@ import java.util.List;
 
 public class Result {
     public List<Arrival> arrival;
-    String queryTime;
-    List<Location> location;
+    public String queryTime;
+    public List<Location> location;
 }

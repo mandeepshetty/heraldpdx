@@ -2,6 +2,8 @@ package droidia.com.heraldpdx.arrivalchecker;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,6 +21,7 @@ import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
 public class MainActivity extends AppCompatActivity implements ArrivalListingView, View.OnKeyListener {
 
     private ArrivalPresenter presenter;
+    private RecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
     }
 
     @BindView(R.id.locationID) EditText locationID;
+    @BindView(R.id.arrivalsRecyclerView) RecyclerView arrivalsRecyclerView;
     private void initViews() {
         ButterKnife.bind(this);
         locationID.setOnKeyListener(this);
@@ -38,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
     @Override
     public void displayArrivals(ArrivalResults arrivals) {
         Toast.makeText(this, "Hello!", Toast.LENGTH_SHORT).show();
+        adapter = new RecyclerViewAdapter(arrivals);
+        arrivalsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        arrivalsRecyclerView.setAdapter(adapter);
     }
 
     @Override
