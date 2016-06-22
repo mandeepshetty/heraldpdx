@@ -49,9 +49,10 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
 
         if (location.isEmpty())
             return;
-        locationCard.setVisibility(View.VISIBLE);
+
         locationCardLocID.setText(String.valueOf(location.get(0).id));
         locationCardLocDesc.setText(location.get(0).desc);
+        locationCard.setVisibility(View.VISIBLE);
     }
 
     @Override

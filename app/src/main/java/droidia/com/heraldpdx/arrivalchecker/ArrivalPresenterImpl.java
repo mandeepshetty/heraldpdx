@@ -1,11 +1,9 @@
 package droidia.com.heraldpdx.arrivalchecker;
 
 import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
-import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -18,7 +16,7 @@ import timber.log.Timber;
     private ArrivalListingView listingView;
 
 
-    public ArrivalPresenterImpl(ArrivalListingView listingView) {
+    ArrivalPresenterImpl(ArrivalListingView listingView) {
         this.interactor = new ArrivalInteractorImpl();
         this.listingView = listingView;
     }
@@ -42,8 +40,16 @@ import timber.log.Timber;
 
                     @Override
                     public void onNext(ArrivalResults arrivalResults) {
-                        listingView.displayArrivals(arrivalResults);
+                        processArrivalResults(arrivalResults);
                     }
                 });
+    }
+
+    private void processArrivalResults(ArrivalResults arrivalResults) {
+
+        if (arrivalResults.containsError())
+            listingView.fetchingArrivalsFailed(arrivalResults.getErrorMessage());
+        else
+            listingView.displayArrivals(arrivalResults);
     }
 }

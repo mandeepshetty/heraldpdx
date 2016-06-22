@@ -10,4 +10,5 @@ public class Result {
     public List<Arrival> arrival;
     public String queryTime;
     public List<Location> location;
+    public Error error;
 }
