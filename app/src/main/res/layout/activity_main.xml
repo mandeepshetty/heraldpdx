@@ -55,7 +55,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="9832"
                 android:textSize="30sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/locationCardConstraintLayout"
@@ -72,7 +71,6 @@
                 android:layout_marginTop="4dp"
                 android:inputType="textMultiLine"
                 android:maxLines="2"
-                android:text="Beaverton Creek"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="@+id/locationCardConstraintLayout"
                 app:layout_constraintHorizontal_bias="0.06"
@@ -80,6 +78,22 @@
                 app:layout_constraintTop_toTopOf="@+id/locationCardConstraintLayout"
                 tools:layout_constraintBottom_creator="1"
                 tools:layout_constraintTop_creator="1" />
+
+            <com.github.ivbaranov.mfb.MaterialFavoriteButton
+                android:id="@+id/favoriteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/locationCardConstraintLayout"
+                app:layout_constraintLeft_toRightOf="@+id/locationCardLocationDescription"
+                app:layout_constraintTop_toTopOf="@+id/locationCardConstraintLayout"
+                app:mfb_animate_favorite="true"
+                app:mfb_animate_unfavorite="false"
+                app:mfb_bounce_duration="300"
+                app:mfb_color="black"
+                app:mfb_padding="12"
+                app:mfb_rotation_angle="360"
+                app:mfb_rotation_duration="400"
+                app:mfb_type="star" />
 
 
         </android.support.constraint.ConstraintLayout>
