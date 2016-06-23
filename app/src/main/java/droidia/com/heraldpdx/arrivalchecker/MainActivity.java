@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.ivbaranov.mfb.MaterialFavoriteButton;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,8 +35,6 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
 
         initViews();
     }
-
-
 
     @Override
     public void displayArrivals(ArrivalResults arrivals) {
@@ -82,8 +82,16 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
     @BindView(R.id.locationCard) CardView locationCard;
     @BindView(R.id.locationCardLocationDescription) TextView locationCardLocDesc;
     @BindView(R.id.locationCardLocationID) TextView locationCardLocID;
+    @BindView(R.id.favoriteButton) MaterialFavoriteButton favoriteButton;
     private void initViews() {
         ButterKnife.bind(this);
         locationID.setOnKeyListener(this);
+        favoriteButton.setOnFavoriteChangeListener((buttonView, favorite) -> favoriteButtonClicked(favorite));
+    }
+
+    private void favoriteButtonClicked(boolean favorite) {
+
+        if (favorite) Toast.makeText(this, "favourited!", Toast.LENGTH_SHORT).show();
+        else Toast.makeText(this, "unfavourited!", Toast.LENGTH_SHORT).show();
     }
 }
