@@ -14,6 +14,7 @@ public interface ArrivalsAPI {
     String BASE_URL = "http://developer.trimet.org/ws/v2/";
 
     @GET("arrivals?appID=782117164D5CE65C764B5B958")
-    Observable<ArrivalResults> getArrivalsAtLocations(@Query("locIDs") String locationIDs);
+    Observable<ArrivalResults> getArrivalsAtLocations(@Query("locIDs") String locationIDs,
+                                                      @Query("arrivals") int arrivalCount);
 
 }

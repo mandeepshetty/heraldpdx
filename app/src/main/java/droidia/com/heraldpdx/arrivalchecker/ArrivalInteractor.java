@@ -9,5 +9,5 @@ import rx.Observable;
 
 interface ArrivalInteractor {
 
-    Observable<ArrivalResults> getArrivalsAtLocation(String locationID, int noOfArrivals);
+    Observable<ArrivalResults> getArrivalsAtLocation(String locationID);
 }

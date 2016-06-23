@@ -69,12 +69,12 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
         return false;
     }
 
-    private void processSearch(String locationID) {
+    private void processSearch(final String locationID) {
         if (!TextUtils.isDigitsOnly(locationID)){
             this.locationID.setError("Stop ID should be digits only.");
             return;
         }
-        presenter.getArrivalsAtLocation(locationID, 1);
+        presenter.getArrivalsAtLocation(locationID);
     }
 
     @BindView(R.id.locationID) EditText locationID;

@@ -8,5 +8,5 @@ import rx.Subscription;
 
 interface ArrivalPresenter {
 
-    Subscription getArrivalsAtLocation(String locationID, int noOfArrivals);
+    Subscription getArrivalsAtLocation(String locationID);
 }

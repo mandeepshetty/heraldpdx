@@ -13,8 +13,9 @@ import rx.Observable;
 
 class ArrivalInteractorImpl implements ArrivalInteractor {
 
+    private final int DEFAULT_ARRIVAL_COUNT = 4;
     @Override
-    public Observable<ArrivalResults> getArrivalsAtLocation(String locationID, int noOfArrivals) {
+    public Observable<ArrivalResults> getArrivalsAtLocation(String locationID) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -24,6 +25,6 @@ class ArrivalInteractorImpl implements ArrivalInteractor {
 
         ArrivalsAPI arrivalsAPI = retrofit.create(ArrivalsAPI.class);
 
-        return Observable.defer(() -> arrivalsAPI.getArrivalsAtLocations(locationID));
+        return Observable.defer(() -> arrivalsAPI.getArrivalsAtLocations(locationID, DEFAULT_ARRIVAL_COUNT));
     }
 }

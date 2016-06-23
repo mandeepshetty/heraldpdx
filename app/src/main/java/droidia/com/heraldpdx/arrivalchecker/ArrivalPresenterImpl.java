@@ -22,11 +22,11 @@ import timber.log.Timber;
     }
 
     @Override
-    public Subscription getArrivalsAtLocation(String locationID, int noOfArrivals) {
+    public Subscription getArrivalsAtLocation(String locationID) {
 
         return interactor
-                .getArrivalsAtLocation(locationID, noOfArrivals)
-                .doOnSubscribe(() -> Timber.i("Fetching %d arrivals for %s", noOfArrivals, locationID))
+                .getArrivalsAtLocation(locationID)
+                .doOnSubscribe(() -> Timber.i("Fetching arrivals for %s", locationID))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ArrivalResults>() {
