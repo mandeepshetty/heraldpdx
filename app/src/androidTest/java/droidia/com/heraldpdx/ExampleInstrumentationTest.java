@@ -25,5 +25,6 @@ public class ExampleInstrumentationTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("droidia.com.heraldpdx", appContext.getPackageName());
+        
     }
 }
