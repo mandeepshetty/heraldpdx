@@ -1,6 +1,7 @@
 package droidia.com.heraldpdx.arrivalchecker;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -29,7 +31,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
 
     private ArrivalResults arrivals;
     Context context;
-    RecyclerViewAdapter(ArrivalResults arrivals) {
+
+    RecyclerViewAdapter(Context context, ArrivalResults arrivals) {
+        this.context = context;
         this.arrivals = arrivals;
     }
 
@@ -55,6 +59,11 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
         String scheduledTime = sdf.format(scheduledDate);
         holder.arrivalScheduledAt.setText("Scheduled at " + scheduledTime);
 
+        String signText = getSignText(arrival);
+        holder.arrivalCircularSign.setText(signText);
+
+        holder.arrivalCircularSign.setBackground(getSignDrawable(signText));
+
         if (arrival.status.equalsIgnoreCase(Arrival.STATUS_SCHEDULED)) {
             holder.estimatedArrivalIn.setText(scheduledTime);
 
@@ -71,6 +80,39 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
         }
     }
 
+
+
+    private Drawable getSignDrawable(String signText) {
+
+        int id;
+        if (signText.equalsIgnoreCase("b")) id = R.drawable.circular_textview_blue;
+        else if (signText.equalsIgnoreCase("g")) id = R.drawable.circular_textview_green;
+        else if (signText.equalsIgnoreCase("o")) id =  R.drawable.circular_textview_orange;
+        else if (signText.equalsIgnoreCase("y")) id =  R.drawable.circular_textview_yellow;
+        else if (signText.equalsIgnoreCase("r")) id =  R.drawable.circular_textview_red;
+        else id = R.drawable.circular_textview_accent;
+
+        return context.getDrawable(id);
+    }
+
+    private String getSignText(Arrival arrival) {
+
+        List<String> MAXLines = Arrays.asList("Orange", "Blue", "Green", "Yellow", "Red");
+
+        String[] split = arrival.shortSign.split(" ");
+
+        for (String lines : MAXLines) {
+
+            // It's a MAX train.
+            if (split[0].equalsIgnoreCase(lines))
+                return lines.substring(0, 1).toUpperCase();
+        }
+
+        // It's a bus. Returns the bus number.
+        return String.valueOf(arrival.route);
+
+    }
+
     @Override
     public int getItemCount() {
         // todo arrival could be null. eg. Location ID 5858.
@@ -80,11 +122,17 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
     }
 
     // todo make class static.
-    class ArrivalViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ArrivalViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.estimatedArrival) TextView estimatedArrivalIn;
-        @BindView(R.id.arrivalDescription) TextView arrivalDescription;
-        @BindView(R.id.arrivalScheduledAt) TextView arrivalScheduledAt;
+        @BindView(R.id.estimatedArrival)
+        TextView estimatedArrivalIn;
+        @BindView(R.id.arrivalDescription)
+        TextView arrivalDescription;
+        @BindView(R.id.arrivalScheduledAt)
+        TextView arrivalScheduledAt;
+        @BindView(R.id.arrivalCircularSign)
+        TextView arrivalCircularSign;
+
         ArrivalViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

@@ -4,4 +4,12 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#FFFFFF</color>
+
+
+    <color name="MAXBlue">#303F9F</color>
+    <color name="MAXGreen">#006600</color>
+    <color name="MAXOrange">#FFA500</color>
+    <color name="MAXYellow">#e0d748</color>
+    <color name="MAXRed">#990000</color>
+
 </resources>

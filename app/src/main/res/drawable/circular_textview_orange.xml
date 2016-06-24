@@ -3,9 +3,7 @@
     android:layout_width="40dp"
     android:layout_height="40dp">
 
-    <solid android:color="#98AFC7" />
-
-
+    <solid android:color="@color/MAXOrange" />
     <corners
         android:bottomLeftRadius="25dp"
         android:bottomRightRadius="25dp"

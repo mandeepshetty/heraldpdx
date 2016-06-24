@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
     public void displayArrivals(ArrivalResults arrivals) {
 
         displayLocationCard(arrivals.resultSet.location);
-        adapter = new RecyclerViewAdapter(arrivals);
+        adapter = new RecyclerViewAdapter(this, arrivals);
         arrivalsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         arrivalsRecyclerView.setAdapter(adapter);
     }
