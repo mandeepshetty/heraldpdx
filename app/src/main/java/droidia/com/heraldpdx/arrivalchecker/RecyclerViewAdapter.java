@@ -1,10 +1,12 @@
 package droidia.com.heraldpdx.arrivalchecker;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,7 +28,7 @@ import timber.log.Timber;
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ArrivalViewHolder> {
 
     private ArrivalResults arrivals;
-
+    Context context;
     RecyclerViewAdapter(ArrivalResults arrivals) {
         this.arrivals = arrivals;
     }
@@ -77,8 +79,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
         return arrivals.resultSet.arrival.size();
     }
 
-
-    static class ArrivalViewHolder extends RecyclerView.ViewHolder {
+    // todo make class static.
+    class ArrivalViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.estimatedArrival) TextView estimatedArrivalIn;
         @BindView(R.id.arrivalDescription) TextView arrivalDescription;
@@ -88,6 +90,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
             ButterKnife.bind(this, itemView);
         }
 
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+        }
     }
 }
 
