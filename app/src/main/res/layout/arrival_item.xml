@@ -1,22 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/locationCardConstraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_centerVertical="true">
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_marginTop="25dp">
+
+    <TextView
+        android:id="@+id/arrivalCircularSign"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circular_textview"
+        android:gravity="center"
+        android:text="291"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/arrivalDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/arrivalCircularSign"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/arrivalCircularSign"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/arrivalScheduledAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/arrivalDescription"
+        android:layout_below="@+id/arrivalDescription"
+        android:layout_marginTop="4dp"
+        android:textSize="13sp" />
 
     <TextView
         android:id="@+id/estimatedArrival"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        app:layout_constraintLeft_toLeftOf="@+id/locationCardConstraintLayout"
-        app:layout_constraintRight_toRightOf="@+id/locationCardConstraintLayout"
-        app:layout_constraintTop_toTopOf="@+id/locationCardConstraintLayout"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
-</android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

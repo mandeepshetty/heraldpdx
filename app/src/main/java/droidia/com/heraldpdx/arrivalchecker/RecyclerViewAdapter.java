@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -38,15 +40,21 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
     @Override
     public void onBindViewHolder(ArrivalViewHolder holder, int position) {
 
+        // todo Too much stuff maybe happening here. Move this shit off the view?
+
         Arrival arrival = arrivals.resultSet.arrival.get(position);
 
-        // todo Too much stuff maybe happening here. Move this shit off the view?
-        if (arrival.status.equalsIgnoreCase(Arrival.STATUS_SCHEDULED)) {
+        holder.arrivalDescription.setText(arrival.shortSign);
 
-            // a is AM/PM marker.
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm a");
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT-4"));
-            holder.estimatedArrivalIn.setText(sdf.format(new Date(arrival.scheduled)));
+        // a is AM/PM marker.
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.US);
+        Date scheduledDate = new Date(Long.parseLong(String.valueOf(arrival.scheduled)));
+        sdf.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+        String scheduledTime = sdf.format(scheduledDate);
+        holder.arrivalScheduledAt.setText("Scheduled at " + scheduledTime);
+
+        if (arrival.status.equalsIgnoreCase(Arrival.STATUS_SCHEDULED)) {
+            holder.estimatedArrivalIn.setText(scheduledTime);
 
         } else if (arrival.status.equalsIgnoreCase(Arrival.STATUS_ESTIMATED)) {
 
@@ -72,9 +80,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
 
     static class ArrivalViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.estimatedArrival)
-        TextView estimatedArrivalIn;
-
+        @BindView(R.id.estimatedArrival) TextView estimatedArrivalIn;
+        @BindView(R.id.arrivalDescription) TextView arrivalDescription;
+        @BindView(R.id.arrivalScheduledAt) TextView arrivalScheduledAt;
         ArrivalViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
