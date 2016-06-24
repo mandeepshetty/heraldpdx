@@ -51,5 +51,6 @@ import timber.log.Timber;
             listingView.fetchingArrivalsFailed(arrivalResults.getErrorMessage());
         else
             listingView.displayArrivals(arrivalResults);
+
     }
 }

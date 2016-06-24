@@ -30,7 +30,7 @@ import timber.log.Timber;
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ArrivalViewHolder> {
 
     private ArrivalResults arrivals;
-    Context context;
+    private Context context;
 
     RecyclerViewAdapter(Context context, ArrivalResults arrivals) {
         this.context = context;
@@ -50,7 +50,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
 
         Arrival arrival = arrivals.resultSet.arrival.get(position);
 
-        holder.arrivalDescription.setText(arrival.shortSign);
+        int index = arrival.fullSign.toLowerCase().indexOf("to");
+        holder.arrivalDescription.setText(arrival.fullSign.substring(index + "to".length()).trim());
+
 
         // a is AM/PM marker.
         SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.US);
@@ -81,15 +83,14 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
     }
 
 
-
     private Drawable getSignDrawable(String signText) {
 
         int id;
         if (signText.equalsIgnoreCase("b")) id = R.drawable.circular_textview_blue;
         else if (signText.equalsIgnoreCase("g")) id = R.drawable.circular_textview_green;
-        else if (signText.equalsIgnoreCase("o")) id =  R.drawable.circular_textview_orange;
-        else if (signText.equalsIgnoreCase("y")) id =  R.drawable.circular_textview_yellow;
-        else if (signText.equalsIgnoreCase("r")) id =  R.drawable.circular_textview_red;
+        else if (signText.equalsIgnoreCase("o")) id = R.drawable.circular_textview_orange;
+        else if (signText.equalsIgnoreCase("y")) id = R.drawable.circular_textview_yellow;
+        else if (signText.equalsIgnoreCase("r")) id = R.drawable.circular_textview_red;
         else id = R.drawable.circular_textview_accent;
 
         return context.getDrawable(id);
