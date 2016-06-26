@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Herald PDX</string>
     <string name="enter_stop_id_to_check_arrivals">Enter stop ID to check arrivals</string>
+    <string name="title_activity_home_screen">HomeScreenActivity</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
