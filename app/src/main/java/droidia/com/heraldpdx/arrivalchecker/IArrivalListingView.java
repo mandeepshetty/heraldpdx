@@ -7,7 +7,7 @@ import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
  * Created by mandeep on 18/6/16.
  */
 
-interface ArrivalListingView {
+interface IArrivalListingView {
 
     void displayArrivals(ArrivalResults arrivals);
 

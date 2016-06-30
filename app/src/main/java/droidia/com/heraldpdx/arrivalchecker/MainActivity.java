@@ -1,7 +1,7 @@
 package droidia.com.heraldpdx.arrivalchecker;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,20 +19,26 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import droidia.com.heraldpdx.R;
+import droidia.com.heraldpdx.savedlocations.HeraldLocation;
+import droidia.com.heraldpdx.savedlocations.ISavedLocationsPresenter;
+import droidia.com.heraldpdx.savedlocations.ISavedLocationsView;
+import droidia.com.heraldpdx.savedlocations.SavedLocationsPresenter;
 import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
 import droidia.com.heraldpdx.trimetapis.arrivals.Location;
 
-public class MainActivity extends AppCompatActivity implements ArrivalListingView, View.OnKeyListener {
+public class MainActivity extends AppCompatActivity implements IArrivalListingView,
+        ISavedLocationsView, View.OnKeyListener {
 
-    private ArrivalPresenter presenter;
+    private IArrivalPresenter IArrivalPresenter;
+    private ISavedLocationsPresenter savedLocationsPresenter;
     private RecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        presenter = new ArrivalPresenterImpl(this);
-
+        IArrivalPresenter = new ArrivalPresenter(this);
+        savedLocationsPresenter = new SavedLocationsPresenter(this);
         initViews();
     }
 
@@ -41,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
 
         displayLocationCard(arrivals.resultSet.location);
         adapter = new RecyclerViewAdapter(this, arrivals);
-        arrivalsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         arrivalsRecyclerView.setAdapter(adapter);
     }
 
@@ -49,10 +54,18 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
 
         if (location.isEmpty())
             return;
-
+        clearFavoriteButton();
         locationCardLocID.setText(String.valueOf(location.get(0).id));
         locationCardLocDesc.setText(location.get(0).desc);
         locationCard.setVisibility(View.VISIBLE);
+    }
+
+
+    // Unset and set listener to prevent triggering of the listener.
+    private void clearFavoriteButton() {
+        favoriteButton.setOnFavoriteChangeListener(null);
+        favoriteButton.setFavorite(false);
+        favoriteButton.setOnFavoriteChangeListener((buttonView, favorite) -> favoriteButtonClicked(favorite));
     }
 
     @Override
@@ -70,28 +83,53 @@ public class MainActivity extends AppCompatActivity implements ArrivalListingVie
     }
 
     private void processSearch(final String locationID) {
-        if (!TextUtils.isDigitsOnly(locationID)){
+        if (!TextUtils.isDigitsOnly(locationID)) {
             this.locationID.setError("Stop ID should be digits only.");
             return;
         }
-        presenter.getArrivalsAtLocation(locationID);
+        IArrivalPresenter.getArrivalsAtLocation(locationID);
     }
 
-    @BindView(R.id.locationID) EditText locationID;
-    @BindView(R.id.arrivalsRecyclerView) RecyclerView arrivalsRecyclerView;
-    @BindView(R.id.locationCard) CardView locationCard;
-    @BindView(R.id.locationCardLocationDescription) TextView locationCardLocDesc;
-    @BindView(R.id.locationCardLocationID) TextView locationCardLocID;
-    @BindView(R.id.favoriteButton) MaterialFavoriteButton favoriteButton;
+    @BindView(R.id.locationID)
+    EditText locationID;
+    @BindView(R.id.arrivalsRecyclerView)
+    RecyclerView arrivalsRecyclerView;
+    @BindView(R.id.locationCard)
+    CardView locationCard;
+    @BindView(R.id.locationCardLocationDescription)
+    TextView locationCardLocDesc;
+    @BindView(R.id.locationCardLocationID)
+    TextView locationCardLocID;
+    @BindView(R.id.favoriteButton)
+    MaterialFavoriteButton favoriteButton;
+
     private void initViews() {
         ButterKnife.bind(this);
         locationID.setOnKeyListener(this);
+        arrivalsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteButton.setOnFavoriteChangeListener((buttonView, favorite) -> favoriteButtonClicked(favorite));
     }
 
     private void favoriteButtonClicked(boolean favorite) {
 
-        if (favorite) Toast.makeText(this, "favourited!", Toast.LENGTH_SHORT).show();
-        else Toast.makeText(this, "unfavourited!", Toast.LENGTH_SHORT).show();
+        HeraldLocation locationToSave = new
+                HeraldLocation(locationCardLocID.getText().toString(), locationCardLocDesc.getText().toString());
+        if (favorite)
+            savedLocationsPresenter.saveLocation(locationToSave);
+        else
+            savedLocationsPresenter.removeLocation(locationToSave);
+    }
+
+    @Override
+    public void locationSaved() {
+        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void displaySavedLocations(List<HeraldLocation> savedLocations) {}
+
+    @Override
+    public void locationRemoved() {
+        Toast.makeText(this, "Removed", Toast.LENGTH_SHORT).show();
     }
 }

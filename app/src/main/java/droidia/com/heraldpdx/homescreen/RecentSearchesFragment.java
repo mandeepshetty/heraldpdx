@@ -1,57 +1,70 @@
 package droidia.com.heraldpdx.homescreen;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import droidia.com.heraldpdx.R;
+import droidia.com.heraldpdx.arrivalchecker.MainActivity;
+import droidia.com.heraldpdx.savedlocations.ILocationListClickListener;
 import timber.log.Timber;
 
-public class RecentSearchesFragment extends Fragment {
+public class RecentSearchesFragment extends Fragment implements ILocationListClickListener {
 
-    private OnFragmentInteractionListener mListener;
+    private Context context;
 
-    public RecentSearchesFragment() {}
+    public RecentSearchesFragment() {
+    }
 
+
+    @BindView(R.id.stopListRecyclerView)
+    RecyclerView stopsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Timber.e("yes!");
-        return inflater.inflate(R.layout.fragment_recent_searches, container, false);
+        View v = inflater.inflate(R.layout.fragment_recent_searches, container, false);
+        ButterKnife.bind(this, v);
+        return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        stopsList.setLayoutManager(new LinearLayoutManager(context));
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        this.context = context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public void locationClicked(String locationID) {
+        Intent i = new Intent(context, MainActivity.class);
+        i.putExtra("locid", locationID);
+        startActivity(i);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Timber.i("onResume");
     }
 }

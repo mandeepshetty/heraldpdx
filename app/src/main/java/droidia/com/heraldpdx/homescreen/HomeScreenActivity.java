@@ -1,7 +1,6 @@
 package droidia.com.heraldpdx.homescreen;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -13,13 +12,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import droidia.com.heraldpdx.R;
 import droidia.com.heraldpdx.arrivalchecker.MainActivity;
+import timber.log.Timber;
 
-public class HomeScreenActivity extends AppCompatActivity implements RecentSearchesFragment.OnFragmentInteractionListener {
+public class HomeScreenActivity extends AppCompatActivity {
 
     private HomeScreenPagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Timber.d("onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,7 +50,13 @@ public class HomeScreenActivity extends AppCompatActivity implements RecentSearc
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    protected void onResume() {
+        super.onResume();
+        Timber.i("onResume");
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

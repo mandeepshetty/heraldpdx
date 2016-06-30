@@ -9,5 +9,6 @@
     tools:context="droidia.com.heraldpdx.homescreen.RecentSearchesFragment">
 
 
+    <include layout="@layout/stops_recycler_view"/>
 
 </RelativeLayout>

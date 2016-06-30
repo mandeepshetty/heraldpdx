@@ -83,6 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
+                android:clickable="true"
                 app:layout_constraintBottom_toBottomOf="@+id/locationCardConstraintLayout"
                 app:layout_constraintRight_toRightOf="@+id/locationCardConstraintLayout"
                 app:layout_constraintTop_toTopOf="@+id/locationCardConstraintLayout"
