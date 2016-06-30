@@ -21,8 +21,13 @@ public class SavedLocationsPresenter implements ISavedLocationsPresenter {
 
     @Override
     public void getSavedLocations() {
-        if (savedLocationsView != null)
-            savedLocationsView.displaySavedLocations(new ArrayList<>(savedLocations));
+        if (savedLocationsView != null) {
+
+            if (savedLocations.isEmpty())
+                savedLocationsView.noSavedLocations();
+            else
+                savedLocationsView.displaySavedLocations(new ArrayList<>(savedLocations));
+        }
     }
 
     @Override

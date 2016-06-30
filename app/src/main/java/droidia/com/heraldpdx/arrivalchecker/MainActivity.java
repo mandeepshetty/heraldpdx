@@ -29,7 +29,7 @@ import droidia.com.heraldpdx.trimetapis.arrivals.Location;
 public class MainActivity extends AppCompatActivity implements IArrivalListingView,
         ISavedLocationsView, View.OnKeyListener {
 
-    private IArrivalPresenter IArrivalPresenter;
+    private IArrivalPresenter arrivalPresenter;
     private ISavedLocationsPresenter savedLocationsPresenter;
     private RecyclerViewAdapter adapter;
 
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements IArrivalListingVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        IArrivalPresenter = new ArrivalPresenter(this);
+        arrivalPresenter = new ArrivalPresenter(this);
         savedLocationsPresenter = new SavedLocationsPresenter(this);
         initViews();
     }
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements IArrivalListingVi
             this.locationID.setError("Stop ID should be digits only.");
             return;
         }
-        IArrivalPresenter.getArrivalsAtLocation(locationID);
+        arrivalPresenter.getArrivalsAtLocation(locationID);
     }
 
     @BindView(R.id.locationID)
@@ -126,10 +126,16 @@ public class MainActivity extends AppCompatActivity implements IArrivalListingVi
     }
 
     @Override
-    public void displaySavedLocations(List<HeraldLocation> savedLocations) {}
+    public void displaySavedLocations(List<HeraldLocation> savedLocations) {
+    }
 
     @Override
     public void locationRemoved() {
         Toast.makeText(this, "Removed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void noSavedLocations() {
+
     }
 }

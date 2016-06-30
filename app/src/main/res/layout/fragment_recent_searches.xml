@@ -11,4 +11,13 @@
 
     <include layout="@layout/stops_recycler_view"/>
 
+    <TextView
+        android:id="@+id/noSavedLocationsMessage"
+        android:gravity="center"
+        android:text="No recent searches."
+        android:visibility="gone"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </RelativeLayout>

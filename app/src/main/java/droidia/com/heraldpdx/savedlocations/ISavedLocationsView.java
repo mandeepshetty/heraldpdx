@@ -12,5 +12,8 @@ public interface ISavedLocationsView {
     void displaySavedLocations(List<HeraldLocation> savedLocations);
 
     void locationRemoved();
+
+    void noSavedLocations();
 }
+
 

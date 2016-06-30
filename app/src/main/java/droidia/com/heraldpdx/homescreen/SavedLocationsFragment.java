@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class SavedLocationsFragment extends Fragment implements ISavedLocationsV
     public SavedLocationsFragment() {}
 
     @BindView(R.id.stopListRecyclerView) RecyclerView stopsList;
+    @BindView(R.id.noSavedLocationsMessage) TextView noSavedLocationsMessage;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,10 +64,16 @@ public class SavedLocationsFragment extends Fragment implements ISavedLocationsV
 
     @Override
     public void displaySavedLocations(List<HeraldLocation> savedLocations) {
+        noSavedLocationsMessage.setVisibility(View.GONE);
         stopsList.setAdapter(new LocationListRecyclerViewAdapter(savedLocations, this, context));
     }
 
     @Override public void locationRemoved() { }
+
+    @Override
+    public void noSavedLocations() {
+        noSavedLocationsMessage.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void locationClicked(String locationID) {
