@@ -12,10 +12,9 @@ import timber.log.Timber;
 public class SavedLocationsPresenter implements ISavedLocationsPresenter {
 
     private final ISavedLocationsView savedLocationsView;
-    private static Set<HeraldLocation> savedLocations;
+    private static final Set<HeraldLocation> savedLocations = new HashSet<>();
 
     public SavedLocationsPresenter(ISavedLocationsView savedLocationsView) {
-        savedLocations = new HashSet<>();
         this.savedLocationsView = savedLocationsView;
     }
 

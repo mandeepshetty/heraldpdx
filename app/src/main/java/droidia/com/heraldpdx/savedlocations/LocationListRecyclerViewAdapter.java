@@ -67,6 +67,7 @@ public class LocationListRecyclerViewAdapter extends
             super(itemView);
             ButterKnife.bind(this, itemView);
             this.clickListener = clickListener;
+            itemView.setOnClickListener(this);
         }
 
         @Override

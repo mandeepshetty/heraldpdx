@@ -1,14 +1,21 @@
 package droidia.com.heraldpdx.arrivalchecker;
 
+import android.app.SearchManager;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.support.v7.widget.SearchView;
+import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +32,10 @@ import droidia.com.heraldpdx.savedlocations.ISavedLocationsView;
 import droidia.com.heraldpdx.savedlocations.SavedLocationsPresenter;
 import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
 import droidia.com.heraldpdx.trimetapis.arrivals.Location;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements IArrivalListingView,
-        ISavedLocationsView, View.OnKeyListener {
+        ISavedLocationsView {
 
     private IArrivalPresenter arrivalPresenter;
     private ISavedLocationsPresenter savedLocationsPresenter;
@@ -40,6 +48,53 @@ public class MainActivity extends AppCompatActivity implements IArrivalListingVi
         arrivalPresenter = new ArrivalPresenter(this);
         savedLocationsPresenter = new SavedLocationsPresenter(this);
         initViews();
+
+        String locid = getIntent().getStringExtra("locid");
+        if (locid != null) {
+            Timber.i("Received intent with location ID: %s", locid);
+            arrivalPresenter.getArrivalsAtLocation(locid);
+        }
+
+        handleIntent(getIntent());
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            arrivalPresenter.getArrivalsAtLocation(query);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setInputType(InputType.TYPE_CLASS_NUMBER);
+        searchView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_left_in));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                arrivalPresenter.getArrivalsAtLocation(query);
+                hideSoftKeyboard();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return true;
+    }
+
+    public void hideSoftKeyboard() {
+        if (getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     @Override
@@ -73,25 +128,7 @@ public class MainActivity extends AppCompatActivity implements IArrivalListingVi
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public boolean onKey(View view, int i, KeyEvent keyEvent) {
-        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && i == KeyEvent.KEYCODE_ENTER) {
-            String locationID = this.locationID.getText().toString().trim();
-            processSearch(locationID);
-        }
-        return false;
-    }
 
-    private void processSearch(final String locationID) {
-        if (!TextUtils.isDigitsOnly(locationID)) {
-            this.locationID.setError("Stop ID should be digits only.");
-            return;
-        }
-        arrivalPresenter.getArrivalsAtLocation(locationID);
-    }
-
-    @BindView(R.id.locationID)
-    EditText locationID;
     @BindView(R.id.arrivalsRecyclerView)
     RecyclerView arrivalsRecyclerView;
     @BindView(R.id.locationCard)
@@ -105,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements IArrivalListingVi
 
     private void initViews() {
         ButterKnife.bind(this);
-        locationID.setOnKeyListener(this);
         arrivalsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteButton.setOnFavoriteChangeListener((buttonView, favorite) -> favoriteButtonClicked(favorite));
     }
@@ -113,7 +149,8 @@ public class MainActivity extends AppCompatActivity implements IArrivalListingVi
     private void favoriteButtonClicked(boolean favorite) {
 
         HeraldLocation locationToSave = new
-                HeraldLocation(locationCardLocID.getText().toString(), locationCardLocDesc.getText().toString());
+                HeraldLocation(locationCardLocID.getText().toString(),
+                locationCardLocDesc.getText().toString());
         if (favorite)
             savedLocationsPresenter.saveLocation(locationToSave);
         else

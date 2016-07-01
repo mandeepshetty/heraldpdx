@@ -72,6 +72,7 @@ public class SavedLocationsFragment extends Fragment implements ISavedLocationsV
 
     @Override
     public void noSavedLocations() {
+        Timber.i("No saved locations.");
         noSavedLocationsMessage.setVisibility(View.VISIBLE);
     }
 
