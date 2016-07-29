@@ -123,7 +123,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
     }
 
     // todo make class static.
-    class ArrivalViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ArrivalViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.estimatedArrival)
         TextView estimatedArrivalIn;
@@ -139,10 +139,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.Arriv
             ButterKnife.bind(this, itemView);
         }
 
-        @Override
-        public void onClick(View view) {
-            Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
-        }
     }
 }
 

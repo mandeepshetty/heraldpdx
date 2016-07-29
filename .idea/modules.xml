@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HeraldPDX.iml" filepath="$PROJECT_DIR$/HeraldPDX.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/heraldpdx.iml" filepath="$PROJECT_DIR$/heraldpdx.iml" />
     </modules>
   </component>
 </project>
