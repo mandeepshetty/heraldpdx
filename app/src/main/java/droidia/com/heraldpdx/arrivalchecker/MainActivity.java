@@ -1,20 +1,29 @@
 package droidia.com.heraldpdx.arrivalchecker;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.InputType;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +35,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import droidia.com.heraldpdx.R;
+import droidia.com.heraldpdx.Utils;
 import droidia.com.heraldpdx.savedlocations.HeraldLocation;
 import droidia.com.heraldpdx.savedlocations.ISavedLocationsPresenter;
 import droidia.com.heraldpdx.savedlocations.ISavedLocationsView;
@@ -39,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements IArrivalListingVi
 
     private IArrivalPresenter arrivalPresenter;
     private ISavedLocationsPresenter savedLocationsPresenter;
-    private RecyclerViewAdapter adapter;
+    private ArrivalsRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,21 +110,29 @@ public class MainActivity extends AppCompatActivity implements IArrivalListingVi
     @Override
     public void displayArrivals(ArrivalResults arrivals) {
 
-        displayLocationCard(arrivals.resultSet.location);
-        adapter = new RecyclerViewAdapter(this, arrivals);
-        arrivalsRecyclerView.setAdapter(adapter);
-    }
-
-    private void displayLocationCard(List<Location> location) {
-
-        if (location.isEmpty())
-            return;
+        List<Location> location = arrivals.resultSet.location;
         clearFavoriteButton();
         locationCardLocID.setText(String.valueOf(location.get(0).id));
         locationCardLocDesc.setText(location.get(0).desc);
-        locationCard.setVisibility(View.VISIBLE);
-    }
 
+        locationCard.setX(Utils.getScreenWidth(this));
+        locationCard.animate()
+                .translationX(0)
+                .alpha(1.0f)
+                .setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        locationCard.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        adapter = new ArrivalsRecyclerViewAdapter(getApplicationContext(), arrivals);
+                        arrivalsRecyclerView.setAdapter(adapter);
+                    }
+                }).start();
+    }
 
     // Unset and set listener to prevent triggering of the listener.
     private void clearFavoriteButton() {

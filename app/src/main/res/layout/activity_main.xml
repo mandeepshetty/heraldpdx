@@ -11,7 +11,7 @@
         android:id="@+id/locationCard"
         android:layout_width="322dp"
         android:layout_height="112dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:cardPreventCornerOverlap="false"
         app:layout_constraintLeft_toLeftOf="@+id/activity_main"
         android:layout_marginStart="19dp"
