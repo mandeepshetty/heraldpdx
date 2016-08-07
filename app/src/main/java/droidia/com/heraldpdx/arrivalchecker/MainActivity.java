@@ -2,46 +2,42 @@ package droidia.com.heraldpdx.arrivalchecker;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.InputType;
-import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import droidia.com.heraldpdx.R;
 import droidia.com.heraldpdx.Utils;
+import droidia.com.heraldpdx.autocompleter.AutoCompleter;
 import droidia.com.heraldpdx.savedlocations.HeraldLocation;
 import droidia.com.heraldpdx.savedlocations.ISavedLocationsPresenter;
 import droidia.com.heraldpdx.savedlocations.ISavedLocationsView;
 import droidia.com.heraldpdx.savedlocations.SavedLocationsPresenter;
 import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
 import droidia.com.heraldpdx.trimetapis.arrivals.Location;
+import droidia.com.heraldpdx.trimetapis.geospatialdata.GeoSpatialKMLDownloader;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements IArrivalListingView,
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements IArrivalListingVi
         arrivalPresenter = new ArrivalPresenter(this);
         savedLocationsPresenter = new SavedLocationsPresenter(this);
         initViews();
-
+//        AutoCompleter.initialize();
         String locid = getIntent().getStringExtra("locid");
         if (locid != null) {
             Timber.i("Received intent with location ID: %s", locid);

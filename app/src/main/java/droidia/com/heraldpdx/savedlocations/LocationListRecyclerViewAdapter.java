@@ -52,6 +52,7 @@ public class LocationListRecyclerViewAdapter extends
         return locationList.size();
     }
 
+    @Override
     public void locationClicked(String locationID) {
         listener.locationClicked(locationID);
     }

@@ -49,9 +49,17 @@ class ArrivalsRecyclerViewAdapter extends RecyclerView.Adapter<ArrivalsRecyclerV
 
         Arrival arrival = arrivals.resultSet.arrival.get(position);
 
-        int index = arrival.fullSign.toLowerCase().indexOf("to");
-        holder.arrivalDescription.setText(arrival.fullSign.substring(index + "to".length()).trim());
+        int index = arrival.fullSign.toLowerCase().indexOf(" ");
+        String fullsign = arrival.fullSign.substring(index).trim();
 
+        // space in "to " is necessary to not accidentally catch words like downtown
+        int toIndex = fullsign.toLowerCase().indexOf("to ");
+
+        if (toIndex >= 0) {
+            fullsign = fullsign.substring(toIndex + "to ".length()).trim();
+        }
+        fullsign = "to " + fullsign;
+        holder.arrivalDescription.setText(fullsign);
 
         // a is AM/PM marker.
         SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.US);
