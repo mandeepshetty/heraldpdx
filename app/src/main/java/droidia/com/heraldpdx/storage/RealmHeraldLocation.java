@@ -22,6 +22,16 @@ public class RealmHeraldLocation extends RealmObject implements SearchSuggestion
     private double latittude;
     private double longitude;
     private String direction;
+
+    public String getDirectionBoolean() {
+        return directionBoolean;
+    }
+
+    public void setDirectionBoolean(String directionBoolean) {
+        this.directionBoolean = directionBoolean;
+    }
+
+    private String directionBoolean;
     private String routeDescription;
     boolean isFrequent;
 
@@ -121,6 +131,27 @@ public class RealmHeraldLocation extends RealmObject implements SearchSuggestion
             return new RealmHeraldLocation[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RealmHeraldLocation that = (RealmHeraldLocation) o;
+
+        if (!locationID.equals(that.locationID)) return false;
+        if (!locationName.equals(that.locationName)) return false;
+        return direction.equals(that.direction);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = locationID.hashCode();
+        result = 31 * result + locationName.hashCode();
+        result = 31 * result + direction.hashCode();
+        return result;
+    }
 
     @Override
     public String getBody() {

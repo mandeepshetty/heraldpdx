@@ -1,39 +1,25 @@
 package droidia.com.heraldpdx.homescreen;
 
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
-import com.jakewharton.rxbinding.widget.RxAutoCompleteTextView;
 import com.jakewharton.rxbinding.widget.RxTextView;
-import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,22 +32,18 @@ import droidia.com.heraldpdx.Utils;
 import droidia.com.heraldpdx.arrivalchecker.MainActivity;
 import droidia.com.heraldpdx.autocompleter.AutoCompleter;
 import droidia.com.heraldpdx.savedlocations.HeraldLocation;
-import droidia.com.heraldpdx.savedlocations.ILocationListClickListener;
-import droidia.com.heraldpdx.savedlocations.ISavedLocationsPresenter;
-import droidia.com.heraldpdx.savedlocations.ISavedLocationsView;
-import droidia.com.heraldpdx.savedlocations.LocationListRecyclerViewAdapter;
-import droidia.com.heraldpdx.savedlocations.SavedLocationsPresenter;
-import droidia.com.heraldpdx.storage.RealmHeraldLocation;
-import rx.Observable;
+import droidia.com.heraldpdx.savedlocations.*;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class HomeScreenActivity extends AppCompatActivity implements ISavedLocationsView, ILocationListClickListener, FloatingSearchView.OnSearchListener {
+public class HomeScreenActivity extends AppCompatActivity implements ISavedLocationsView,
+        ILocationListClickListener,
+        FloatingSearchView.OnSearchListener,
+        FloatingSearchView.OnMenuItemClickListener {
 
-    private static final long ANIM_DURATION_TOOLBAR = 400;
+    private static final long ANIM_DURATION_TOOLBAR = 200;
     private ISavedLocationsPresenter presenter;
     boolean introAnimationPending = true;
     private final int COUNT_OF_FUZZY_MATCHES = 8;
@@ -87,10 +69,15 @@ public class HomeScreenActivity extends AppCompatActivity implements ISavedLocat
         presenter.getSavedLocations();
     }
 
-    @BindView(R.id.floating_search_view) FloatingSearchView floatingSearchView;
-    @BindView(R.id.noSavedLocationsMessage) TextView noSavedLocationsMessage;
-    @BindView(R.id.savedLocationsRecyclerView) RecyclerView savedLocationsRecyclerView;
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.floating_search_view)
+    FloatingSearchView floatingSearchView;
+    @BindView(R.id.noSavedLocationsMessage)
+    TextView noSavedLocationsMessage;
+    @BindView(R.id.savedLocationsRecyclerView)
+    RecyclerView savedLocationsRecyclerView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    EditText searchTextView;
 
     private void initViews() {
 
@@ -100,10 +87,10 @@ public class HomeScreenActivity extends AppCompatActivity implements ISavedLocat
         savedLocationsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         floatingSearchView.setOnBindSuggestionCallback(bindSuggestionCallback);
-
+        floatingSearchView.setOnMenuItemClickListener(this);
         floatingSearchView.setOnSearchListener(this);
         // Get access to the edit text in floating search view so we can RX that bitch with debounce.
-        EditText searchTextView = (EditText) floatingSearchView.findViewById(R.id.search_bar_text);
+        searchTextView = (EditText) floatingSearchView.findViewById(R.id.search_bar_text);
 
         RxTextView.textChangeEvents(searchTextView)
                 .debounce(400, TimeUnit.MILLISECONDS)
@@ -125,8 +112,6 @@ public class HomeScreenActivity extends AppCompatActivity implements ISavedLocat
                             })
                             .subscribe();
                 });
-
-
     }
 
     private SearchSuggestionsAdapter.OnBindSuggestionCallback bindSuggestionCallback =
@@ -134,41 +119,9 @@ public class HomeScreenActivity extends AppCompatActivity implements ISavedLocat
 
                 HeraldLocation rhl = (HeraldLocation) item;
 
-                // StringBuilder size is the length of the suggestion and at most every character in pattern
-                // is replaced with 7 characters for the HTML bold  and the direction String.
-                // This is a rough approximation.
-                StringBuilder sb = new StringBuilder(
-                        textView.getText().toString().length() +
-                        rhl.getDirection().length() +
-                        (floatingSearchView.getQuery().length() * 7)
-                );
-                String locationName = rhl.getBody();
-                String query = floatingSearchView.getQuery();
-                int queryMarker = 0;
-                int locationNameMarker = 0;
-                for (locationNameMarker = 0;
-                     locationNameMarker < locationName.length() && queryMarker < query.length() ;
-                     locationNameMarker++) {
 
-                    String locationNameChar = String.valueOf(locationName.charAt(locationNameMarker));
-                    String queryChar = String.valueOf(query.charAt(queryMarker));
-
-                    if (locationNameChar.equalsIgnoreCase(queryChar)) {
-                        sb.append("<b>").append(locationNameChar).append("</b>");
-                        queryMarker++;
-                    } else {
-                        sb.append(locationNameChar);
-                    }
-
-                }
-
-                // Query done. If more characters in location name left, tack them on.
-                if (locationNameMarker != locationName.length()) {
-                    sb.append(locationName.substring(locationNameMarker));
-                }
-                sb.append("<br><small>").append(rhl.getDirection()).append("</small>");
-
-                textView.setText(Html.fromHtml(sb.toString()));
+                String formattedHTML = getFormattedHTMLForSuggestion(rhl);
+                textView.setText(Html.fromHtml(formattedHTML));
 
                 if (rhl.transportType.equalsIgnoreCase("BUS")) {
                     leftIcon.setImageDrawable(this.getDrawable(R.drawable.ic_blackbus));
@@ -178,17 +131,56 @@ public class HomeScreenActivity extends AppCompatActivity implements ISavedLocat
 
             };
 
+    @NonNull
+    private String getFormattedHTMLForSuggestion(HeraldLocation rhl) {
+
+        // StringBuilder size is the length of the suggestion and at most every character in pattern
+        // is replaced with 7 characters for the HTML bold  and the direction String.
+        // This is a rough approximation.
+        StringBuilder sb = new StringBuilder(
+                rhl.locationName.length() +
+                        rhl.getDirection().length() +
+                        (floatingSearchView.getQuery().length() * 7)
+        );
+        String locationName = rhl.getBody();
+        String query = floatingSearchView.getQuery();
+        int queryMarker = 0;
+        int locationNameMarker = 0;
+        for (locationNameMarker = 0;
+             locationNameMarker < locationName.length() && queryMarker < query.length();
+             locationNameMarker++) {
+
+            String locationNameChar = String.valueOf(locationName.charAt(locationNameMarker));
+            String queryChar = String.valueOf(query.charAt(queryMarker));
+
+            if (locationNameChar.equalsIgnoreCase(queryChar)) {
+                sb.append("<b>").append(locationNameChar).append("</b>");
+                queryMarker++;
+            } else {
+                sb.append(locationNameChar);
+            }
+
+        }
+
+        // Query done. If more characters in location name left, tack them on.
+        if (locationNameMarker != locationName.length()) {
+            sb.append(locationName.substring(locationNameMarker));
+        }
+        sb.append("<br><small>").append(rhl.getDirection()).append("</small>");
+        return sb.toString();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setInputType(InputType.TYPE_CLASS_NUMBER);
-        searchView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_left_in));
-        ComponentName cn = new ComponentName(this, MainActivity.class);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.options_menu, menu);
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        MenuItem searchItem = menu.findItem(R.id.search);
+//        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//        searchView.setInputType(InputType.TYPE_CLASS_NUMBER);
+//        searchView.setAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_left_in));
+//        ComponentName cn = new ComponentName(this, MainActivity.class);
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(cn));
 
         startIntroAnimation();
 
@@ -208,7 +200,7 @@ public class HomeScreenActivity extends AppCompatActivity implements ISavedLocat
         floatingSearchView.animate()
                 .translationY(0)
                 .setDuration(ANIM_DURATION_TOOLBAR)
-                .setStartDelay(550);
+                .setStartDelay(400);
 
     }
 
@@ -221,7 +213,9 @@ public class HomeScreenActivity extends AppCompatActivity implements ISavedLocat
 
     @Override
     protected void onStop() {
+
         super.onStop();
+
     }
 
     @Override
@@ -262,6 +256,27 @@ public class HomeScreenActivity extends AppCompatActivity implements ISavedLocat
 
     @Override
     public void onSearchAction(String currentQuery) {
+        Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("locid", currentQuery.trim());
+        startActivity(i);
+    }
 
+    @Override
+    public void onActionMenuItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.filterByStopID: {
+
+                if (item.isChecked()) {
+                    Toast.makeText(this, "Name mode", Toast.LENGTH_SHORT).show();
+                    floatingSearchView.setMenuItemIconColor(R.color.colorAccent);
+                    item.setChecked(false);
+                } else {
+                    Toast.makeText(this, "Stop mode", Toast.LENGTH_SHORT).show();
+                    floatingSearchView.setMenuItemIconColor(R.color.light_gray_inactive_icon);
+                    item.setChecked(true);
+                }
+            }
+        }
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
@@ -7,38 +7,118 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/savedLocationCircularSign"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
-        android:layout_marginTop="16dp" />
+    <android.support.v7.widget.CardView
+        android:id="@+id/savedLocationCard"
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
+        android:visibility="visible"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
 
-    <TextView
-        android:id="@+id/savedLocationID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/savedLocationCircularSign"
-        android:layout_marginStart="24dp"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
-        android:layout_marginTop="16dp" />
+        <RelativeLayout
+            android:id="@+id/sl_relative_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/savedLocationDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="17sp"
-        app:layout_constraintLeft_toRightOf="@+id/savedLocationCircularSign"
-        android:layout_marginStart="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/savedLocationID" />
+            <ImageView
+                android:id="@+id/vehicleIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                app:srcCompat="@drawable/ic_bluetrain" />
 
-</android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/savedLocationStopName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/vehicleIcon"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/vehicleIcon"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Willow Creek"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/savedLocationStopID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/savedLocationStopName"
+                android:layout_below="@id/savedLocationStopName"
+                android:layout_centerVertical="true"
+                android:text="9832" />
+
+            <ImageView
+                android:id="@+id/sl_arrival_1_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignStart="@id/savedLocationStopName"
+                android:layout_below="@id/savedLocationStopID"
+                android:layout_toEndOf="@id/vehicleIcon"
+                app:srcCompat="@drawable/ic_bluetrain" />
+
+            <TextView
+                android:id="@+id/sl_arrival_1_desc"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/savedLocationStopID"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/sl_arrival_1_icon"
+                android:layout_toLeftOf="@+id/sl_arrival_1_estimate"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="to Gresham"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/sl_arrival_1_estimate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/sl_arrival_1_desc"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="14dp"
+                android:text="6 min"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/sl_arrival_2_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignStart="@id/savedLocationStopName"
+                android:layout_below="@id/sl_arrival_1_icon"
+                android:layout_toEndOf="@id/vehicleIcon"
+                app:srcCompat="@drawable/ic_bluetrain" />
+
+            <TextView
+                android:id="@+id/sl_arrival_2_desc"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sl_arrival_1_icon"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/sl_arrival_2_icon"
+                android:layout_toStartOf="@+id/sl_arrival_2_estimate"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="to Airport"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/sl_arrival_2_estimate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/sl_arrival_2_desc"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="14dp"
+                android:text="12 min"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>

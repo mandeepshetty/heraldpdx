@@ -11,7 +11,7 @@ import rx.Observable;
  * Created by mandeep on 18/6/16.
  */
 
-class ArrivalInteractor implements IArrivalInteractor {
+public class ArrivalInteractor implements IArrivalInteractor {
 
     private final int DEFAULT_ARRIVAL_COUNT = 4;
     @Override

@@ -10,13 +10,13 @@ import timber.log.Timber;
 /**
  * Created by mandeep on 18/6/16.
  */
-    class ArrivalPresenter implements IArrivalPresenter {
+public class ArrivalPresenter implements IArrivalPresenter {
 
     private IArrivalInteractor interactor;
     private IArrivalListingView listingView;
 
 
-    ArrivalPresenter(IArrivalListingView listingView) {
+    public ArrivalPresenter(IArrivalListingView listingView) {
         this.interactor = new ArrivalInteractor();
         this.listingView = listingView;
     }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import droidia.com.heraldpdx.savedlocations.HeraldLocation;
 import droidia.com.heraldpdx.storage.RealmHeraldLocation;
@@ -23,7 +24,7 @@ import timber.log.Timber;
 
 public class AutoCompleter {
 
-    private static final List<RealmHeraldLocation> allStops = new ArrayList<>(6000);
+    private static final Set<RealmHeraldLocation> allStops = new HashSet<>(6000);
     private static Date localDataSetTimeStamp = new Date(-1);
     private static Date tempTimeStamp = new Date(-1);
     private static AllStopsStore allStopsStore = null;
@@ -47,6 +48,7 @@ public class AutoCompleter {
 
                     allStopsStore = AllStopsStore.getInstance();
                     allStopsStore.save(allStops);
+                    Timber.e("Saved! Realm file size %d", allStopsStore.getRealmfileSize());
                 })
                 .doOnError(throwable -> System.out.println(throwable.getMessage()))
                 .subscribe(heraldLocation -> allStops.add(heraldLocation));
@@ -61,35 +63,30 @@ public class AutoCompleter {
     private static  Observable<HeraldLocation> fetchFuzzyMatches(String pattern, int count) {
 
         // todo Replace this with a heap maybe.
-        Timber.i("Getting fuzzy matches in %d", Thread.currentThread().getId());
         SortedList<RealmHeraldLocation> fuzzyMatches = new SortedList<>(RealmHeraldLocation.class, callback);
         AllStopsStore instance = AllStopsStore.getInstance();
         List<RealmHeraldLocation> allStops = instance.getAll();
+        List<HeraldLocation> listFuzzyMatches = new ArrayList<>(count);
         Observable.from(allStops)
                 .filter(rhl ->
                         FuzzyMatcher.isPatternSequentiallyPresentInString(pattern, rhl.getLocationName()))
-                .doOnNext(rhl -> Timber.i("Evaluating %s", rhl.getLocationName()))
                 .doOnNext(rhl -> rhl.fuzzyScore = FuzzyMatcher.fuzzyMatch(pattern, rhl.getLocationName()))
                 .doOnNext(rhl -> fuzzyMatches.add(rhl))
                 .doOnCompleted(() -> {
-                    Timber.i("Completed ! size : %d", fuzzyMatches.size());
+
+                    for (int i = 0; i < fuzzyMatches.size() && i < count; i++) {
+
+                        RealmHeraldLocation rhl = fuzzyMatches.get(i);
+                        HeraldLocation hl = new HeraldLocation(rhl.getLocationID(), rhl.getLocationName());
+                        hl.setTransportType(rhl.getTransportType());
+                        hl.setRouteDescription(rhl.getRouteDescription());
+                        hl.setDirection(rhl.getDirection());
+                        listFuzzyMatches.add(hl);
+                    }
+                    instance.destroyInstance();
                 })
+                .toBlocking()
                 .subscribe();
-
-        Timber.i("Now it is size : %d", fuzzyMatches.size());
-        // Do this because Realm objects can only be accessed from thread they
-        // are created in wtf !
-        List<HeraldLocation> listFuzzyMatches = new ArrayList<>(count);
-        for (int i = 0; i < fuzzyMatches.size() && i < count; i++) {
-
-            RealmHeraldLocation rhl = fuzzyMatches.get(i);
-            HeraldLocation hl = new HeraldLocation(rhl.getLocationID(), rhl.getLocationName());
-            hl.setTransportType(rhl.getTransportType());
-            hl.setRouteDescription(rhl.getRouteDescription());
-            hl.setDirection(rhl.getDirection());
-            listFuzzyMatches.add(hl);
-        }
-        instance.destroyInstance();
         return Observable.from(listFuzzyMatches);
 
     }
@@ -144,6 +141,7 @@ public class AutoCompleter {
         String transportType = null;
         String direction = null;
         String routeDescription = null;
+        String directionBoolean = null;
         for (Datum d : placemark.ExtendedData.Data) {
 
             switch (d.name) {
@@ -162,6 +160,8 @@ public class AutoCompleter {
                 case "direction_description":
                     direction = d.value;
                     break;
+                case "direction":
+                    directionBoolean = d.value;
             }
         }
         RealmHeraldLocation rhl = new RealmHeraldLocation();
@@ -170,6 +170,7 @@ public class AutoCompleter {
         rhl.setDirection(direction);
         rhl.setTransportType(transportType);
         rhl.setRouteDescription(routeDescription);
+        rhl.setDirectionBoolean(directionBoolean);
         rhl.setPrimaryKey();
         return rhl;
     }

@@ -2,6 +2,7 @@ package droidia.com.heraldpdx.autocompleter;
 
 import android.content.Context;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -23,6 +24,7 @@ import timber.log.Timber;
 
 public class AllStopsStore {
 
+    private int size = 0;
     private Realm allStopsRealm = Realm.getInstance(new RealmConfiguration.Builder(HeraldPDX.getContext())
             .name("allstops.realm")
             .build());
@@ -31,7 +33,7 @@ public class AllStopsStore {
             .name("timestamps.realm")
             .build());
 
-    static AllStopsStore getInstance() {
+    public static AllStopsStore getInstance() {
 
         return new AllStopsStore();
     }
@@ -41,22 +43,13 @@ public class AllStopsStore {
     void save(Collection<RealmHeraldLocation> locations) {
 
         Timber.e("Saving %d items", locations.size());
+        size = locations.size();
         if (locations.isEmpty()) return;
 
-        allStopsRealm.executeTransaction(realm -> realm.deleteAll());
-
-        for (RealmHeraldLocation rhl: locations){
-            try {
-                allStopsRealm.beginTransaction();
-                allStopsRealm.copyToRealmOrUpdate(rhl);
-                allStopsRealm.commitTransaction();
-            }
-            catch (RealmException rexp) {
-                rexp.printStackTrace();
-            }
-
-        }
-
+        allStopsRealm.executeTransaction(realm -> {
+            realm.deleteAll();
+            allStopsRealm.copyToRealm(locations);
+        });
 
     }
 
@@ -75,7 +68,24 @@ public class AllStopsStore {
         RealmResults<RealmHeraldLocation> allStops =
                 allStopsRealm.where(RealmHeraldLocation.class).findAll();
         Timber.i("findAll: %d", allStops.size());
+        ArrayList<RealmHeraldLocation> realmHeraldLocations = new ArrayList<>(allStops);
+        Timber.i("lis findall : %d", realmHeraldLocations.size());
+        return realmHeraldLocations;
+
+    }
+
+    public List<RealmHeraldLocation> getForStopID(String stopID){
+
+        RealmResults<RealmHeraldLocation> allStops =
+                allStopsRealm.where(RealmHeraldLocation.class).findAll();
+        Timber.i("findAll: %d", allStops.size());
         return new ArrayList<>(allStops);
 
+    }
+
+    public long getRealmfileSize() {
+
+        File realmFile = new File(allStopsRealm.getPath());
+        return realmFile.length();
     }
 }

@@ -18,6 +18,7 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import droidia.com.heraldpdx.R;
+import droidia.com.heraldpdx.Utils;
 import droidia.com.heraldpdx.trimetapis.arrivals.Arrival;
 import droidia.com.heraldpdx.trimetapis.arrivals.ArrivalResults;
 import timber.log.Timber;
@@ -49,16 +50,7 @@ class ArrivalsRecyclerViewAdapter extends RecyclerView.Adapter<ArrivalsRecyclerV
 
         Arrival arrival = arrivals.resultSet.arrival.get(position);
 
-        int index = arrival.fullSign.toLowerCase().indexOf(" ");
-        String fullsign = arrival.fullSign.substring(index).trim();
-
-        // space in "to " is necessary to not accidentally catch words like downtown
-        int toIndex = fullsign.toLowerCase().indexOf("to ");
-
-        if (toIndex >= 0) {
-            fullsign = fullsign.substring(toIndex + "to ".length()).trim();
-        }
-        fullsign = "to " + fullsign;
+        String fullsign = Utils.getArrivalDescription(arrival);
         holder.arrivalDescription.setText(fullsign);
 
         // a is AM/PM marker.

@@ -14,7 +14,7 @@ import timber.log.Timber;
  * Created by mandeep on 7/31/16.
  */
 
-public class SavedLocationsStore {
+class SavedLocationsStore {
 
     private static SavedLocationsStore instance;
     private static Realm savedLocationsRealm;
@@ -58,9 +58,10 @@ public class SavedLocationsStore {
     }
 
     public List<HeraldLocation> getSavedLocations() {
-        Timber.e("Accessing from: %d", Thread.currentThread().getId());
-        RealmResults<RealmHeraldLocation> realmSaved = savedLocationsRealm.where(RealmHeraldLocation.class)
-                .findAll();
+
+        RealmResults<RealmHeraldLocation> realmSaved =
+                savedLocationsRealm.where(RealmHeraldLocation.class).findAll();
+
         List<HeraldLocation> savedLocations = new ArrayList<>(realmSaved.size());
 
         for (RealmHeraldLocation rhl: realmSaved) {

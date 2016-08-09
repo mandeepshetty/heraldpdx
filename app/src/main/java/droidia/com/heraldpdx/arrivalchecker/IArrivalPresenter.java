@@ -6,7 +6,7 @@ import rx.Subscription;
  * Created by mandeep on 18/6/16.
  */
 
-interface IArrivalPresenter {
+public interface IArrivalPresenter {
 
     Subscription getArrivalsAtLocation(String locationID);
 }

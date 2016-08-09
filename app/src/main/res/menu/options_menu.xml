@@ -5,7 +5,9 @@
     <item android:id="@+id/search"
         android:visible="true"
         android:icon="@android:drawable/ic_menu_search"
+        android:enabled="true"
         app:showAsAction="collapseActionView|ifRoom"
-        app:actionViewClass="android.support.v7.widget.SearchView" />
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:title="Stop ID Filter" />
 
 </menu>
